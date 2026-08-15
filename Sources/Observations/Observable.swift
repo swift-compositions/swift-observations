@@ -52,7 +52,7 @@
 @attached(extension, conformances: Observable)
 @attached(memberAttribute)
 public macro Observable() =
-  #externalMacro(
-    module: "Observations_Macros",
-    type: "ObservableMacro"
-  )
+    #externalMacro(
+        module: "Observations_Macros",
+        type: "ObservableMacro"
+    )

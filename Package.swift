@@ -52,12 +52,25 @@ let package = Package(
             dependencies: [
                 "Observations",
                 .product(name: "Kernel Test Support", package: "swift-kernel"),
+                // Swift Build links the package's test targets into one bundle
+                // and takes its link settings from the first test target, while
+                // a `.macro` target propagates none of its own product
+                // dependencies. Without these the bundle cannot resolve the
+                // SwiftSyntax symbols the macro implementation carries in.
+                .product(name: "SwiftSyntax", package: "swift-syntax"),
+                .product(name: "SwiftSyntaxBuilder", package: "swift-syntax"),
+                .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
+                .product(name: "SwiftSyntaxMacroExpansion", package: "swift-syntax"),
             ]
         ),
         .testTarget(
             name: "Observations Macros Tests",
             dependencies: [
                 "Observations Macros",
+                .product(name: "SwiftSyntax", package: "swift-syntax"),
+                .product(name: "SwiftSyntaxBuilder", package: "swift-syntax"),
+                .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
+                .product(name: "SwiftSyntaxMacroExpansion", package: "swift-syntax"),
                 .product(name: "SwiftSyntaxMacrosGenericTestSupport", package: "swift-syntax"),
             ]
         ),

@@ -1,15 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-observations open source project
-//
-// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-observations
-// project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import SwiftSyntax
 import SwiftSyntaxMacroExpansion
 import SwiftSyntaxMacros
@@ -18,19 +6,11 @@ import Testing
 
 @testable import Observations_Macros
 
-// MARK: - Macro registry
-
 private let testMacros: [String: MacroSpec] = [
     "Observable": MacroSpec(type: ObservableMacro.self),
     "_ObservationTracked": MacroSpec(type: ObservationTrackedMacro.self),
 ]
 
-// MARK: - Swift Testing adapter
-
-/// Bridges `SwiftSyntaxMacrosGenericTestSupport.assertMacroExpansion`'s
-/// framework-agnostic `failureHandler` callback to Swift Testing's
-/// `Issue.record(...)`. Avoids `SwiftSyntaxMacrosTestSupport`, which
-/// pulls XCTest (and transitively Foundation).
 private func expectMacroExpansion(
     _ originalSource: String,
     expandedSource: String,
@@ -61,8 +41,6 @@ private func expectMacroExpansion(
     )
 }
 
-// MARK: - Suite hierarchy
-
 extension ObservableMacro {
     @Suite
     struct Test {
@@ -70,8 +48,6 @@ extension ObservableMacro {
         @Suite struct `Edge Case` {}
     }
 }
-
-// MARK: - Unit
 
 extension ObservableMacro.Test.Unit {
 
@@ -133,10 +109,7 @@ extension ObservableMacro.Test.Unit {
 
     @Test
     func `noncopyable struct expansion composes with ~Copyable Self`() {
-        // Ground rule #2 research gate: confirms that `_$registrar` and
-        // `_modify` synthesis admit `~Copyable Self`. Registrar's CoW
-        // shape carries no Copyable constraint, so the conformance is
-        // valid.
+
         expectMacroExpansion(
             """
             @Observable
@@ -249,8 +222,6 @@ extension ObservableMacro.Test.Unit {
         )
     }
 }
-
-// MARK: - Edge Case
 
 extension ObservableMacro.Test.`Edge Case` {
 

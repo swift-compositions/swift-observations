@@ -1,40 +1,10 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-observations open source project
-//
-// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-observations
-// project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import SwiftSyntax
 import SwiftSyntaxMacros
 
-/// Implementation of `@_ObservationTracked` — the property-level
-/// helper synthesized by `@Observable`'s `MemberAttributeMacro`.
-///
-/// `_ObservationTracked` is not intended for direct user invocation.
-/// `@Observable` reattaches it to each tracked `var` with the
-/// per-property index, then this macro fires:
-///
-/// - `AccessorMacro` synthesizes `init`/`_read`/`_modify` accessors,
-///   routing through `_$registrar` and recording reads against the
-///   active ``withObservationTracking(_:onChange:)`` frame.
-/// - `PeerMacro` synthesizes the underscore-prefixed storage peer.
-///
-/// The `init` accessor uses `@storageRestrictions(initializes:_x)` so
-/// the user's `var x: Int = 0` initializer flows into the `_x` peer
-/// at construction time, preserving the user-facing memberwise init.
 public struct ObservationTrackedMacro {}
 
-// MARK: - Helpers
-
 extension VariableDeclSyntax {
-    /// Returns the binding's identifier and trimmed type, when the
-    /// declaration carries a single typed binding.
+
     fileprivate var trackedBinding: (name: TokenSyntax, type: TypeSyntax)? {
         guard bindings.count == 1, let binding = bindings.first,
             let identifier = binding.pattern.as(IdentifierPatternSyntax.self),
@@ -52,8 +22,6 @@ private func extractID(from node: AttributeSyntax) -> UInt32 {
     else { return 0 }
     return value
 }
-
-// MARK: - AccessorMacro
 
 extension ObservationTrackedMacro: AccessorMacro {
     public static func expansion(
@@ -91,8 +59,6 @@ extension ObservationTrackedMacro: AccessorMacro {
         return [initAcc, readAcc, modifyAcc]
     }
 }
-
-// MARK: - PeerMacro
 
 extension ObservationTrackedMacro: PeerMacro {
     public static func expansion(

@@ -1,44 +1,10 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-observations open source project
-//
-// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-observations
-// project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import SwiftSyntax
 import SwiftSyntaxMacros
 
-/// Implementation of the `@Observable` type-level attached macro.
-///
-/// `@Observable` is applied to a `struct`, `class`, `actor`, or
-/// `~Copyable struct` Subject. Three protocols fire in one pass:
-///
-/// - `MemberMacro` synthesizes the stored `_$registrar` field.
-/// - `ExtensionMacro` synthesizes the `Observable` conformance.
-/// - `MemberAttributeMacro` reattaches `@_ObservationTracked(N)` to
-///   each stored `var` in declaration order, with a sequential
-///   `UInt32` index argument. The companion `ObservationTrackedMacro`
-///   then synthesizes the per-property accessor block and the
-///   underscore-prefixed storage peer.
-///
-/// The `_ObservationTracked` helper is `_`-prefixed to flag it as an
-/// implementation detail not intended for direct user invocation.
-/// Apple's `@Observable` macro uses the same two-macro split for the
-/// same reason — Swift validates every `@attached(...)` form against
-/// the attachment site, so a single macro cannot host both type-level
-/// and property-level forms.
 public struct ObservableMacro {}
 
-// MARK: - Helpers
-
 extension VariableDeclSyntax {
-    /// Whether this `var` is a stored, non-static, non-computed
-    /// property eligible for observation tracking.
+
     fileprivate var isObservableStored: Bool {
         guard bindingSpecifier.tokenKind == .keyword(.var) else { return false }
         for modifier in modifiers {
@@ -61,7 +27,6 @@ extension VariableDeclSyntax {
         return true
     }
 
-    /// The first binding's identifier text.
     fileprivate var firstBindingName: String? {
         guard let binding = bindings.first,
             let id = binding.pattern.as(IdentifierPatternSyntax.self)
@@ -70,8 +35,6 @@ extension VariableDeclSyntax {
     }
 }
 
-// MARK: - MemberMacro
-
 extension ObservableMacro: MemberMacro {
     public static func expansion(
         of node: AttributeSyntax,
@@ -79,11 +42,7 @@ extension ObservableMacro: MemberMacro {
         conformingTo protocols: [TypeSyntax],
         in context: some MacroExpansionContext
     ) throws(Never) -> [DeclSyntax] {
-        // `conformingTo` reports the conformances requested via
-        // `@attached(extension, conformances: …)`. The member
-        // synthesis is the same regardless — we always emit
-        // `_$registrar`; the `Observable` conformance itself is added
-        // by the `ExtensionMacro` form below.
+
         _ = protocols
 
         for member in declaration.memberBlock.members {
@@ -101,8 +60,6 @@ extension ObservableMacro: MemberMacro {
         ]
     }
 }
-
-// MARK: - ExtensionMacro
 
 extension ObservableMacro: ExtensionMacro {
     public static func expansion(
@@ -128,8 +85,6 @@ extension ObservableMacro: ExtensionMacro {
         return [extensionDecl.cast(ExtensionDeclSyntax.self)]
     }
 }
-
-// MARK: - MemberAttributeMacro
 
 extension ObservableMacro: MemberAttributeMacro {
     public static func expansion(

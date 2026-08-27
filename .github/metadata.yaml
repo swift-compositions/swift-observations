@@ -1,7 +1,7 @@
 # .github/metadata.yaml
 description: "An @Observable macro and observation tracking for structs, ~Copyable structs, classes, and actors in Swift."
 topics:
-  - foundations
+  - compositions
   - observation
   - macros
 homepage: "https://swift-institute.org"

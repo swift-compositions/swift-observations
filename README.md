@@ -39,7 +39,7 @@ Add swift-observations to your `Package.swift` (no version tags are published ye
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/swift-foundations/swift-observations.git", branch: "main")
+    .package(url: "https://github.com/swift-compositions/swift-observations.git", branch: "main")
 ]
 ```
 
@@ -118,7 +118,7 @@ struct Gauge {
 | `withObservationTracking(_:onChange:)` | Records reads in the body; fires `onChange` once on the first tracked mutation |
 | `Observation.Tracking.access(_:_:)` | Records a single read against the active tracking frame (no-op when none is active) |
 | `Observation.Subscription.Token` | `~Copyable` RAII handle — unsubscribes on `deinit`, `detach()` to transfer ownership |
-| `Observation.Registrar` (re-exported) | Subscribe/notify core from Observation Primitives |
+| `Observation.Registrar` (re-exported) | Subscribe/notify core from Observation |
 
 Tracking frames are thread-local: synchronous code on the same thread sees the active frame; an async hop to another thread does not carry it. Nested `withObservationTracking` calls stack — only the innermost frame records.
 

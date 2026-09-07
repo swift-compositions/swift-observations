@@ -1,6 +1,6 @@
 internal import Kernel_Thread
 
-extension Observation.Tracking {
+extension Observer.Tracking {
 
     static let _slot: Kernel.Thread.Local<Frame> =
         try! Kernel.Thread.Local()
@@ -17,7 +17,7 @@ extension Observation.Tracking {
         guard let current = _slot.value else { return }
         precondition(
             current === frame,
-            "Observation.Tracking frame popped out of order"
+            "Observer.Tracking frame popped out of order"
         )
         _slot.value = frame.parent
     }

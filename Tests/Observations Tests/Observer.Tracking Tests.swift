@@ -9,32 +9,32 @@ struct Counter {
     var y: Int = 0
 }
 
-extension Observation.Tracking {
+extension Observer.Tracking {
     @Suite
     struct Test {
         @Suite struct `Context Capture` {}
-        @Suite struct `With Observation Tracking` {}
+        @Suite struct `With Observer Tracking` {}
         @Suite struct `Token` {}
     }
 }
 
-extension Observation.Tracking.Test.`Context Capture` {
+extension Observer.Tracking.Test.`Context Capture` {
 
     @Test
     func `access outside withObservationTracking is a no-op`() {
 
         let counter = Counter()
-        Observation.Tracking.access(counter._$registrar, .init(0))
+        Observer.Tracking.access(counter._$registrar, .init(0))
 
     }
 
     @Test
     func `currentFrame is nil outside withObservationTracking`() {
-        #expect(Observation.Tracking.currentFrame() == nil)
+        #expect(Observer.Tracking.currentFrame() == nil)
     }
 }
 
-extension Observation.Tracking.Test.`With Observation Tracking` {
+extension Observer.Tracking.Test.`With Observer Tracking` {
 
     @Test
     func `onChange fires when a tracked property mutates`() {
@@ -156,11 +156,11 @@ extension Observation.Tracking.Test.`With Observation Tracking` {
     }
 }
 
-extension Observation.Tracking.Test.Token {
+extension Observer.Tracking.Test.Token {
 
     @Test
     func `Token unsubscribes on deinit`() {
-        let registrar = Observation.Registrar()
+        let registrar = Observer.Registrar()
         let fireCount = LockedBox(0)
 
         do {
@@ -168,7 +168,7 @@ extension Observation.Tracking.Test.Token {
                 to: [.init(0)],
                 didSet: { _ in fireCount.withLock { $0 += 1 } }
             )
-            _ = Observation.Subscription.Token(registrar, id)
+            _ = Observer.Subscription.Token(registrar, id)
         }
 
         registrar.didSet(.init(0))
@@ -177,16 +177,16 @@ extension Observation.Tracking.Test.Token {
 
     @Test
     func `Token detach disarms the deinit`() {
-        let registrar = Observation.Registrar()
+        let registrar = Observer.Registrar()
         let fireCount = LockedBox(0)
 
-        let detached: (Observation.Registrar, Observation.Subscription.ID)?
+        let detached: (Observer.Registrar, Observer.Subscription.ID)?
         do {
             let id = registrar.subscribe(
                 to: [.init(0)],
                 didSet: { _ in fireCount.withLock { $0 += 1 } }
             )
-            var token = Observation.Subscription.Token(registrar, id)
+            var token = Observer.Subscription.Token(registrar, id)
             detached = token.detach()
         }
 
@@ -198,9 +198,9 @@ extension Observation.Tracking.Test.Token {
 
     @Test
     func `Token detach twice returns nil the second time`() {
-        let registrar = Observation.Registrar()
+        let registrar = Observer.Registrar()
         let id = registrar.subscribe(to: [.init(0)])
-        var token = Observation.Subscription.Token(registrar, id)
+        var token = Observer.Subscription.Token(registrar, id)
 
         let first = token.detach()
         let second = token.detach()

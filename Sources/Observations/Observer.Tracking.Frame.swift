@@ -1,4 +1,4 @@
-extension Observation.Tracking {
+extension Observer.Tracking {
 
     final class Frame {
 
@@ -6,7 +6,7 @@ extension Observation.Tracking {
 
         var accesses:
             [ObjectIdentifier: (
-                registrar: Observation.Registrar, properties: Set<Observation.Property.ID>
+                registrar: Observer.Registrar, properties: Set<Observer.Property.ID>
             )] = [:]
 
         init(parent: Frame?) {
@@ -15,9 +15,9 @@ extension Observation.Tracking {
     }
 }
 
-extension Observation.Tracking.Frame {
+extension Observer.Tracking.Frame {
 
-    func record(_ registrar: Observation.Registrar, _ propertyID: Observation.Property.ID) {
+    func record(_ registrar: Observer.Registrar, _ propertyID: Observer.Property.ID) {
         let key = registrar.id
         if accesses[key] != nil {
             accesses[key]!.properties.insert(propertyID)

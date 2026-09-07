@@ -1,8 +1,8 @@
-extension Observation.Tracking {
+extension Observer.Tracking {
 
     public static func access(
-        _ registrar: Observation.Registrar,
-        _ propertyID: Observation.Property.ID
+        _ registrar: Observer.Registrar,
+        _ propertyID: Observer.Property.ID
     ) {
         guard let frame = currentFrame() else { return }
         frame.record(registrar, propertyID)

@@ -5,30 +5,30 @@ public func withObservationTracking<R>(
     _ apply: () -> R,
     onChange: @escaping @Sendable () -> Void
 ) -> R {
-    let frame = Observation.Tracking.Frame(parent: Observation.Tracking.currentFrame())
-    Observation.Tracking.pushFrame(frame)
+    let frame = Observer.Tracking.Frame(parent: Observer.Tracking.currentFrame())
+    Observer.Tracking.pushFrame(frame)
     let result = apply()
-    Observation.Tracking.popFrame(frame)
+    Observer.Tracking.popFrame(frame)
 
     let accesses = frame.accesses
     guard !accesses.isEmpty else { return result }
 
-    Observation.Tracking._installOneShot(accesses: accesses, onChange: onChange)
+    Observer.Tracking._installOneShot(accesses: accesses, onChange: onChange)
 
     return result
 }
 
-extension Observation.Tracking {
+extension Observer.Tracking {
 
     @discardableResult
     static func _installOneShot(
         accesses: [ObjectIdentifier: (
-            registrar: Observation.Registrar, properties: Set<Observation.Property.ID>
+            registrar: Observer.Registrar, properties: Set<Observer.Property.ID>
         )],
         onChange: @escaping @Sendable () -> Void
     ) -> Ownership.Latch<@Sendable () -> Void> {
 
-        let pending: Mutex<[(Observation.Registrar, Observation.Subscription.ID)]> = Mutex([])
+        let pending: Mutex<[(Observer.Registrar, Observer.Subscription.ID)]> = Mutex([])
 
         let cleanup: @Sendable () -> Void = {
             let ids = pending.withLock { $0 }

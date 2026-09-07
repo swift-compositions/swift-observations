@@ -20,10 +20,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/swift-compositions/swift-kernel.git", branch: "main"),
-        .package(
-            url: "https://github.com/swift-molecules/swift-observation.git",
-            branch: "main"
-        ),
+        .package(path: "../../swift-atoms/swift-observer"),
         .package(
             url: "https://github.com/swift-molecules/swift-reference.git",
             branch: "main"
@@ -43,7 +40,7 @@ let package = Package(
             name: "Observations",
             dependencies: [
                 .product(name: "Kernel Thread", package: "swift-kernel"),
-                .product(name: "Observation", package: "swift-observation"),
+                .product(name: "Observer", package: "swift-observer"),
                 .product(name: "Reference", package: "swift-reference"),
                 .product(name: "Ownership", package: "swift-ownership"),
                 .product(name: "Tagged", package: "swift-tagged"),

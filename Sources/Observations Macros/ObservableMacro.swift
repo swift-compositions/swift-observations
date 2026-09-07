@@ -56,7 +56,7 @@ extension ObservableMacro: MemberMacro {
             }
         }
         return [
-            "let _$registrar: Observation.Registrar = Observation.Registrar()"
+            "let _$registrar: Observer.Registrar = Observer.Registrar()"
         ]
     }
 }
@@ -72,8 +72,8 @@ extension ObservableMacro: ExtensionMacro {
         if let inherits = declaration.inheritanceClause {
             for entry in inherits.inheritedTypes {
                 let token = entry.type.trimmedDescription
-                if token == "Observable" || token == "Observation.Observable"
-                    || token == "Observation.Protocol" || token == "Observation.`Protocol`"
+                if token == "Observable" || token == "Observer.Observable"
+                    || token == "Observer.Protocol" || token == "Observer.`Protocol`"
                 {
                     return []
                 }

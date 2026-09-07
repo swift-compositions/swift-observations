@@ -1,14 +1,14 @@
-extension Observation.Subscription {
+extension Observer.Subscription {
 
     public struct Token: ~Copyable, Sendable {
         @usableFromInline
-        var _registrar: Observation.Registrar?
+        var _registrar: Observer.Registrar?
 
         @usableFromInline
-        var _id: Observation.Subscription.ID?
+        var _id: Observer.Subscription.ID?
 
         @inlinable
-        public init(_ registrar: Observation.Registrar, _ id: Observation.Subscription.ID) {
+        public init(_ registrar: Observer.Registrar, _ id: Observer.Subscription.ID) {
             self._registrar = registrar
             self._id = id
         }
@@ -21,10 +21,10 @@ extension Observation.Subscription {
     }
 }
 
-extension Observation.Subscription.Token {
+extension Observer.Subscription.Token {
 
     @inlinable
-    public mutating func detach() -> (Observation.Registrar, Observation.Subscription.ID)? {
+    public mutating func detach() -> (Observer.Registrar, Observer.Subscription.ID)? {
         guard let registrar = _registrar, let id = _id else { return nil }
         _registrar = nil
         _id = nil

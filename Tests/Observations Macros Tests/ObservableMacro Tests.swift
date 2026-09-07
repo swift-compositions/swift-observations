@@ -69,7 +69,7 @@ extension ObservableMacro.Test.Unit {
                             _x = initialValue
                         }
                         _read {
-                            Observation.Tracking.access(_$registrar, .init(0))
+                            Observer.Tracking.access(_$registrar, .init(0))
                             yield _x
                         }
                         _modify {
@@ -86,7 +86,7 @@ extension ObservableMacro.Test.Unit {
                             _y = initialValue
                         }
                         _read {
-                            Observation.Tracking.access(_$registrar, .init(1))
+                            Observer.Tracking.access(_$registrar, .init(1))
                             yield _y
                         }
                         _modify {
@@ -98,7 +98,7 @@ extension ObservableMacro.Test.Unit {
 
                     var _y: Int
 
-                    let _$registrar: Observation.Registrar = Observation.Registrar()
+                    let _$registrar: Observer.Registrar = Observer.Registrar()
                 }
 
                 extension Counter: Observable {
@@ -125,7 +125,7 @@ extension ObservableMacro.Test.Unit {
                             _x = initialValue
                         }
                         _read {
-                            Observation.Tracking.access(_$registrar, .init(0))
+                            Observer.Tracking.access(_$registrar, .init(0))
                             yield _x
                         }
                         _modify {
@@ -137,7 +137,7 @@ extension ObservableMacro.Test.Unit {
 
                     var _x: Int
 
-                    let _$registrar: Observation.Registrar = Observation.Registrar()
+                    let _$registrar: Observer.Registrar = Observer.Registrar()
                 }
 
                 extension Foo: Observable {
@@ -163,7 +163,7 @@ extension ObservableMacro.Test.Unit {
                             _value = initialValue
                         }
                         _read {
-                            Observation.Tracking.access(_$registrar, .init(0))
+                            Observer.Tracking.access(_$registrar, .init(0))
                             yield _value
                         }
                         _modify {
@@ -175,7 +175,7 @@ extension ObservableMacro.Test.Unit {
 
                     var _value: Int
 
-                    let _$registrar: Observation.Registrar = Observation.Registrar()
+                    let _$registrar: Observer.Registrar = Observer.Registrar()
                 }
 
                 extension Box: Observable {
@@ -201,7 +201,7 @@ extension ObservableMacro.Test.Unit {
                             _value = initialValue
                         }
                         _read {
-                            Observation.Tracking.access(_$registrar, .init(0))
+                            Observer.Tracking.access(_$registrar, .init(0))
                             yield _value
                         }
                         _modify {
@@ -213,7 +213,7 @@ extension ObservableMacro.Test.Unit {
 
                     var _value: T
 
-                    let _$registrar: Observation.Registrar = Observation.Registrar()
+                    let _$registrar: Observer.Registrar = Observer.Registrar()
                 }
 
                 extension Box: Observable {
@@ -244,7 +244,7 @@ extension ObservableMacro.Test.`Edge Case` {
                             _x = initialValue
                         }
                         _read {
-                            Observation.Tracking.access(_$registrar, .init(0))
+                            Observer.Tracking.access(_$registrar, .init(0))
                             yield _x
                         }
                         _modify {
@@ -256,7 +256,7 @@ extension ObservableMacro.Test.`Edge Case` {
 
                     var _x: Int
 
-                    let _$registrar: Observation.Registrar = Observation.Registrar()
+                    let _$registrar: Observer.Registrar = Observer.Registrar()
                 }
 
                 extension Counter: Observable {
@@ -284,7 +284,7 @@ extension ObservableMacro.Test.`Edge Case` {
                             _x = initialValue
                         }
                         _read {
-                            Observation.Tracking.access(_$registrar, .init(0))
+                            Observer.Tracking.access(_$registrar, .init(0))
                             yield _x
                         }
                         _modify {
@@ -296,7 +296,7 @@ extension ObservableMacro.Test.`Edge Case` {
 
                     var _x: Int
 
-                    let _$registrar: Observation.Registrar = Observation.Registrar()
+                    let _$registrar: Observer.Registrar = Observer.Registrar()
                 }
 
                 extension Counter: Observable {

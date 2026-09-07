@@ -45,7 +45,7 @@ extension ObservationTrackedMacro: AccessorMacro {
             """
         let readAcc: AccessorDeclSyntax = """
             _read {
-                Observation.Tracking.access(_$registrar, .init(\(raw: id)))
+                Observer.Tracking.access(_$registrar, .init(\(raw: id)))
                 yield \(storage)
             }
             """

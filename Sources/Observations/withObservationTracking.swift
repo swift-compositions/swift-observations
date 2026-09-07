@@ -1,4 +1,4 @@
-internal import Ownership_Latch
+internal import Ownership
 internal import Synchronization
 
 public func withObservationTracking<R>(

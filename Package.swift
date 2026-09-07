@@ -46,7 +46,6 @@ let package = Package(
                 .product(name: "Observation", package: "swift-observation"),
                 .product(name: "Reference", package: "swift-reference"),
                 .product(name: "Ownership", package: "swift-ownership"),
-                .product(name: "Ownership Latch", package: "swift-ownership"),
                 .product(name: "Tagged", package: "swift-tagged"),
                 "Observations Macros",
             ]

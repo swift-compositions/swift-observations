@@ -30,7 +30,7 @@ let package = Package(
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-tagged.git",
+            url: "https://github.com/swift-atoms/swift-tagged.git",
             branch: "main"
         ),
         .package(url: "https://github.com/swiftlang/swift-syntax.git", "603.0.2"..<"604.0.0"),

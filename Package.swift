@@ -20,7 +20,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/swift-compositions/swift-kernel.git", branch: "main"),
-        .package(path: "../../swift-atoms/swift-observer"),
+        .package(url: "https://github.com/swift-atoms/swift-observer.git", branch: "main"),
         .package(
             url: "https://github.com/swift-atoms/swift-reference.git",
             branch: "main"

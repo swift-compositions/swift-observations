@@ -2,8 +2,13 @@ internal import Kernel_Thread
 
 extension Observer.Tracking {
 
-    static let _slot: Kernel.Thread.Local<Frame> =
-        try! Kernel.Thread.Local()
+    static let _slot: Kernel.Thread.Local<Frame> = {
+        do {
+            return try Kernel.Thread.Local()
+        } catch {
+            preconditionFailure("Thread-local slot allocation failed: \(error)")
+        }
+    }()
 
     static func currentFrame() -> Frame? {
         _slot.value

@@ -1,133 +1,15 @@
 # swift-observations
 
-![Development Status](https://img.shields.io/badge/status-active--development-blue.svg)
+Use this package when you want a struct, a `~Copyable` struct or a class to report changes to its properties, and to react to the first change of whatever a piece of code read. Mark the type with `@Observable` and read it inside `withObservationTracking(_:onChange:)`. If you write the accessors yourself, call `Observer.Tracking.access(_:_:)` from each read and keep the subscription in an `Observer.Subscription.Token`. If you only need the registrar that delivers will-set and did-set notifications, use swift-observer, which this package re-exports.
 
-Observation tracking for Swift value types — an `@Observable` macro and `withObservationTracking(_:onChange:)` that work on structs, `~Copyable` structs, classes, and actors.
+## Laws
 
-## Quick Start
-
-Apple's Observation framework restricts `@Observable` to classes. This package attaches it to value types:
-
-```swift
-import Observations
-
-@Observable
-struct Download {
-    var progress: Double = 0
-    var isComplete: Bool = false
-}
-
-var download = Download()
-
-_ = withObservationTracking {
-    download.progress
-} onChange: {
-    print("progress changed")
-}
-
-download.progress = 0.5   // prints "progress changed"
-download.isComplete = true // untracked — no output
-```
-
-`onChange` fires exactly once, on the first mutation of any property read inside the tracking body. To keep tracking, call `withObservationTracking` again from `onChange`. The callback may run on whichever thread performs the mutation.
-
-In a multi-statement tracking body, force each read with an explicit consume (`let _ = download.progress`) — a bare property reference at statement position may be elided by the compiler. Single-expression bodies are unambiguous.
-
-## Installation
-
-Add swift-observations to your `Package.swift` (no version tags are published yet; pin to `main`):
-
-```swift
-dependencies: [
-    .package(url: "https://github.com/swift-compositions/swift-observations.git", branch: "main")
-]
-```
-
-Add the product to your target:
-
-```swift
-.target(
-    name: "YourTarget",
-    dependencies: [
-        .product(name: "Observations", package: "swift-observations")
-    ]
-)
-```
-
-### Requirements
-
-- Swift 6.3+ toolchain
-- macOS 26+, iOS 26+, tvOS 26+, watchOS 26+, visionOS 26+
-
-## Key Features
-
-- **Value-type subjects** — `@Observable` attaches to structs, `~Copyable` structs, classes, and actors; per-property identifiers are assigned in declaration order, so they are stable across recompiles.
-- **One-shot change tracking** — `withObservationTracking(_:onChange:)` records every tracked read in a per-thread frame and installs one-shot didSet handlers; the first mutation wins and all sibling handlers are unsubscribed without firing.
-- **RAII subscriptions** — `Observation.Subscription.Token` is a `~Copyable` handle that unsubscribes on `deinit`; the type system guarantees the unsubscribe runs exactly once, and `detach()` transfers ownership to a longer-lived registry.
-- **Manual observation without the macro** — the underlying `Observation.Registrar` surface is re-exported, so hand-authored `_read` accessors can call `Observation.Tracking.access(_:_:)` directly.
-
-## Usage Examples
-
-### Scoped subscriptions with `Token`
-
-A bare `Observation.Registrar.subscribe(to:didSet:)` returns an ID the caller must remember to unsubscribe. The token removes that contract:
-
-```swift
-import Observations
-
-let registrar = Observation.Registrar()
-do {
-    let token = Observation.Subscription.Token(
-        registrar,
-        registrar.subscribe(to: [.init(0)], didSet: { _ in print("property 0 mutated") })
-    )
-    // ... observe ...
-}
-// token deinits at scope exit; the observer is unsubscribed.
-```
-
-### Hand-authored tracked accessors
-
-Types that cannot take the macro can participate in tracking by recording reads themselves:
-
-```swift
-import Observations
-
-struct Gauge {
-    let registrar = Observation.Registrar()
-    var _level: Int = 0
-
-    var level: Int {
-        _read {
-            Observation.Tracking.access(registrar, .init(0))
-            yield _level
-        }
-        set {
-            _level = newValue
-            registrar.didSet(.init(0))
-        }
-    }
-}
-```
-
-## Architecture
-
-| Type | Purpose |
-|------|---------|
-| `@Observable` | Macro — synthesizes the registrar field, `Observable` conformance, and tracked accessors for every stored `var` |
-| `withObservationTracking(_:onChange:)` | Records reads in the body; fires `onChange` once on the first tracked mutation |
-| `Observation.Tracking.access(_:_:)` | Records a single read against the active tracking frame (no-op when none is active) |
-| `Observation.Subscription.Token` | `~Copyable` RAII handle — unsubscribes on `deinit`, `detach()` to transfer ownership |
-| `Observation.Registrar` (re-exported) | Subscribe/notify core from Observation |
-
-Tracking frames are thread-local: synchronous code on the same thread sees the active frame; an async hop to another thread does not carry it. Nested `withObservationTracking` calls stack — only the innermost frame records.
-
-## Community
-
-<!-- BEGIN: discussion -->
-*Discussion thread will be created at first public release.*
-<!-- END: discussion -->
-
-## License
-
-Apache 2.0 — see [LICENSE](LICENSE.md).
+- `@Observable` tracks every stored `var` without accessors whose name doesn't start with an underscore. `let`, `static`, `class` and `lazy` properties, computed properties and underscore-prefixed properties are left alone.
+- Tracked properties are numbered from 0 in declaration order, counting only tracked properties, and that number is the `Observer.Property.ID` used for notifications.
+- A tracked property notifies around every in-place modification, with `willSet` before and `didSet` after. A read records an access only.
+- `@Observable` adds no registrar if the type already declares `_$registrar`, and no conformance if the type already lists `Observable` or `Observer.Protocol`.
+- `withObservationTracking(_:onChange:)` calls `onChange` at most once, on the first `didSet` of any property the body read, on the thread that made the change. Every subscription the call installed is removed before `onChange` runs. To keep watching, track again from `onChange`.
+- A body that reads no tracked property installs nothing, and its `onChange` never runs.
+- Tracking is per thread. Reads made on another thread during the body are not recorded. When tracking is nested, only the innermost call records a read, and the outer call doesn't see it.
+- `Observer.Tracking.access(_:_:)` does nothing outside `withObservationTracking(_:onChange:)`.
+- An `Observer.Subscription.Token` unsubscribes when it is destroyed, unless `Observer.Subscription.Token.detach()` took the subscription out first. A second `detach()` returns nil.

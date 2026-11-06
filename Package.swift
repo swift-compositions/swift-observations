@@ -44,7 +44,7 @@ let package = Package(
                 .product(name: "Reference", package: "swift-reference"),
                 .product(name: "Ownership", package: "swift-ownership"),
                 .product(name: "Tagged", package: "swift-tagged"),
-                "Observations Macros",
+                .target(name: "Observations Macros"),
             ]
         ),
         .macro(
@@ -58,7 +58,7 @@ let package = Package(
         .testTarget(
             name: "Observations Tests",
             dependencies: [
-                "Observations",
+                .target(name: "Observations"),
                 .product(name: "Kernel Test Support", package: "swift-kernel"),
 
                 .product(name: "SwiftSyntax", package: "swift-syntax"),
@@ -70,7 +70,7 @@ let package = Package(
         .testTarget(
             name: "Observations Macros Tests",
             dependencies: [
-                "Observations Macros",
+                .target(name: "Observations Macros"),
                 .product(name: "SwiftSyntax", package: "swift-syntax"),
                 .product(name: "SwiftSyntaxBuilder", package: "swift-syntax"),
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),

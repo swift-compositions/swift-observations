@@ -41,7 +41,9 @@ private func expectMacroExpansion(
     )
 }
 
-extension ObservableMacro {
+enum `ObservableMacro Tests` {}
+
+extension `ObservableMacro Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -49,7 +51,7 @@ extension ObservableMacro {
     }
 }
 
-extension ObservableMacro.Test.Unit {
+extension `ObservableMacro Tests`.Test.Unit {
 
     @Test
     func `simple struct with two stored vars expands to target shape`() {
@@ -223,7 +225,7 @@ extension ObservableMacro.Test.Unit {
     }
 }
 
-extension ObservableMacro.Test.`Edge Case` {
+extension `ObservableMacro Tests`.Test.`Edge Case` {
 
     @Test
     func `mixed let and var only tracks var`() {

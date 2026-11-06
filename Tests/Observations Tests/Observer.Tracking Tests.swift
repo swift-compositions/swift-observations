@@ -9,7 +9,9 @@ struct Counter {
     var y: Int = 0
 }
 
-extension Observer.Tracking {
+enum `Observer.Tracking Tests` {}
+
+extension `Observer.Tracking Tests` {
     @Suite
     struct Test {
         @Suite struct `Context Capture` {}
@@ -18,7 +20,7 @@ extension Observer.Tracking {
     }
 }
 
-extension Observer.Tracking.Test.`Context Capture` {
+extension `Observer.Tracking Tests`.Test.`Context Capture` {
 
     @Test
     func `access outside withObservationTracking is a no-op`() {
@@ -34,7 +36,7 @@ extension Observer.Tracking.Test.`Context Capture` {
     }
 }
 
-extension Observer.Tracking.Test.`With Observer Tracking` {
+extension `Observer.Tracking Tests`.Test.`With Observer Tracking` {
 
     @Test
     func `onChange fires when a tracked property mutates`() {
@@ -156,7 +158,7 @@ extension Observer.Tracking.Test.`With Observer Tracking` {
     }
 }
 
-extension Observer.Tracking.Test.Token {
+extension `Observer.Tracking Tests`.Test.Token {
 
     @Test
     func `Token unsubscribes on deinit`() {

@@ -14,10 +14,15 @@ enum `Observer.Tracking Tests` {}
 extension `Observer.Tracking Tests` {
     @Suite
     struct Test {
-        @Suite struct `Context Capture` {}
-        @Suite struct `With Observer Tracking` {}
-        @Suite struct `Token` {}
     }
+}
+
+extension `Observer.Tracking Tests`.Test {
+    @Suite struct `Context Capture` {}
+
+    @Suite struct `With Observer Tracking` {}
+
+    @Suite struct `Token` {}
 }
 
 extension `Observer.Tracking Tests`.Test.`Context Capture` {

@@ -2,7 +2,7 @@ import SwiftCompilerPlugin
 import SwiftSyntaxMacros
 
 @main
-fileprivate struct ObservationsPlugin: CompilerPlugin {
+struct ObservationsPlugin: CompilerPlugin {
     let providingMacros: [Macro.Type] = [
         ObservableMacro.self,
         ObservationTrackedMacro.self,
